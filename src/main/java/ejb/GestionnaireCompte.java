@@ -51,4 +51,29 @@ public class GestionnaireCompte {
                 = em.createQuery("select count(c) from CompteBancaire c", Long.class);
         return query.getSingleResult();
     }
+
+    public CompteBancaire findById(long id) {
+        return em.find(CompteBancaire.class, id);
+    }
+
+    public CompteBancaire update(CompteBancaire compteBancaire) {
+        return em.merge(compteBancaire);
+    }
+
+    public void deposer(CompteBancaire compteBancaire, int montant) {
+        compteBancaire.deposer(montant);
+        update(compteBancaire);
+    }
+
+    public void retirer(CompteBancaire compteBancaire, int montant) {
+        compteBancaire.retirer(montant);
+        update(compteBancaire);
+    }
+
+    public void transferer(CompteBancaire source, CompteBancaire destination, int montant) {
+        source.retirer(montant);
+        destination.deposer(montant);
+        update(source);
+        update(destination);
+    }
 }
